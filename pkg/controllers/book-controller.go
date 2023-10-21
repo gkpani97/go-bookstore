@@ -1,12 +1,11 @@
 package controllers
 
 import(
-	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
-	"net/http"
 	"strconv"
-	"github.com/gkpani97/go-bookstore/pkg/utils"
+	"net/http"
+	"encoding/json"
+	"github.com/gorilla/mux"
 	"github.com/gkpani97/go-bookstore/pkg/models"
 )
 
@@ -29,14 +28,19 @@ func GetBookById(w http.ResponseWriter, r *http.Request){
 	}
 	bookDetails, _ := models.GetBookById(ID)
 	res, _:= json.Marshal(bookDetails)
-	w.Header().Set("Content-Type", "appliction/json")
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
 }
 
 func CreateBook(w http.ResponseWriter, r *http.Request){
-	CreateBook := &models.Book{}
-	utils.ParseBody(r, CreateBook)
+	decoder := json.NewDecoder(r.Body)
+    var CreateBook models.Book
+    err := decoder.Decode(&CreateBook)
+	if err != nil {
+        panic(err)
+    }
+	fmt.Printf("body: %+v",CreateBook)
 	book:= CreateBook.CreateBook()
 	res, _:= json.Marshal(book)
 	w.WriteHeader(http.StatusOK)
@@ -58,15 +62,21 @@ func DeleteBook(w http.ResponseWriter, r *http.Request){
 }
 
 func UpdateBook(w http.ResponseWriter, r *http.Request){
-	var UpdateBook = &models.Book{}
-	utils.ParseBody(r, UpdateBook)
+	decoder := json.NewDecoder(r.Body)
+    var UpdateBook models.Book
+    err := decoder.Decode(&UpdateBook)
+	if err != nil {
+        panic(err)
+    }
+
 	vars:= mux.Vars(r)
 	bookId:= vars["bookId"]
 	ID, err:= strconv.ParseInt(bookId, 0, 0)
 	if err != nil{
 		fmt.Println(err)
 	}
-	bookDetails, db:= models.GetBookById(ID)
+
+	bookDetails, db:= models.GetBookById(ID)	
 	if UpdateBook.Name != ""{
 		bookDetails.Name = UpdateBook.Name
 	}

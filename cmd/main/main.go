@@ -3,9 +3,11 @@ package main
 import (
 	"log"
 	"net/http"
-	"github.com/gkpani97/go-bookstore/pkg/routes"
+
 	"github.com/gorilla/mux"
 	_ "gorm.io/driver/mysql"
+	
+	"github.com/gkpani97/go-bookstore/pkg/routes"
 )
 
 func main(){

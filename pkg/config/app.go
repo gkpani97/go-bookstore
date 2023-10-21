@@ -1,16 +1,16 @@
 package config
 
 import (
-	"gorm.io/gorm"
 	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 var (
 	db *gorm.DB
 )
 
-func Connect(){
-	dsn := "gkpani:pass1234/simplerest?charset=utf8&parseTime=True&loc=Local"
+func Connect() {
+	dsn := "gkpani:pass1234@tcp(localhost:3306)/go_bookstore?charset=utf8&parseTime=True&loc=Local"
 	d, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic(err)
@@ -18,7 +18,6 @@ func Connect(){
 	db = d
 }
 
-func GetDB() *gorm.DB{
+func GetDB() *gorm.DB {
 	return db
 }
-
